@@ -1,7 +1,9 @@
 import subprocess as proc
 from glob import glob
 import argparse
+import wget
 import sys
+import os
 
 FILES_URL = 'https://files.mcneel.com'
 
@@ -9,18 +11,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--version", type=str, required=True, choices=['6', '7', '8'])
 parser.add_argument("-fv", "--fullversion", type=str, required=False, default="latest")
 parser.add_argument("-c", "--culture", type=str, default="en-us")
-parser.add_argument("p", "--platform", type=str, required=True, choices=['mac', 'win'])
+parser.add_argument("-p", "--platform", type=str, required=True, choices=['mac', 'win'])
+parser.add_argument('-k', '--licensekey', type=str, required=True)
 
 args = parser.parse_args()
 version = args.version
 culture = args.culture
 platform = args.platform
 full_version = args.fullversion
-
-def get_specifics(os: str) -> str:
-    if os == 'mac':
-        return f'rhino/{version}/mac/releases/rhino_wip'
-    return f'dujour/exe/{num}/rhino_{culture}'
+license_key = args.licensekey
 
 def get_ext(os: str) -> str:
     if os == 'mac':
@@ -152,8 +151,8 @@ download_url_stack = {
         },
         '8' : {
     #       'latest' : 'https://www.rhino3d.com/download/rhino-for-windows/8/latest/direct?email=example@email.com', # LATEST // NOT FIGURED OUT YET
-
-    #       '8.0.23150.10305' : f'{FILES_URL}/dujor/exe/<num>/rhino_{culture}_8.0.23150.10305.{get_ext(platform)}',
+            'latest' : f'{FILES_URL}/dujor/exe/20230530/rhino_{culture}_8.0.23150.10305.{get_ext(platform)}',
+            '8.0.23150.10305' : f'{FILES_URL}/dujor/exe/20230530/rhino_{culture}_8.0.23150.10305.{get_ext(platform)}',
     #       '8.0.23143.18305' : f'{FILES_URL}/dujor/exe/<num>/rhino_{culture}_8.0.23143.18305.{get_ext(platform)}',
     #       '8.0.23136.12095' : f'{FILES_URL}/dujor/exe/<num>/rhino_{culture}_8.0.23136.12095.{get_ext(platform)}',
     #       '8.0.23129.12305' : f'{FILES_URL}/dujor/exe/<num>/rhino_{culture}_8.0.23129.12305.{get_ext(platform)}',
@@ -178,4 +177,24 @@ download_url_stack = {
 }
 
 download_url = download_url_stack[platform][version][full_version]
+exe_name = f'rhino_{version}_{full_version}.exe'
+print(f'Downloading Rhino from {download_url} to {exe_name}')
 
+if os.path.isfile(exe_name):
+    print('Rhino is already downloaded. Using Cached version')
+else:
+    wget.download(download_url, exe_name)
+
+cwd = os.getcwd()
+rhino_exe_path = f'{cwd}\{exe_name}'
+
+# We use repair incase it is already installed
+# https://wiki.mcneel.com/rhino/installingrhino/7
+proc.run([ rhino_exe_path,
+            '-repair',
+            '-quiet',
+            '-passive',
+            'LICENSE_METHOD=STANDALONE',
+            f'LICENSE_KEY={license_key}' ,
+            '-norestart',
+            'INSTALL_EN=1'])
