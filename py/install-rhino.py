@@ -52,7 +52,7 @@ if len(rhino_exes) == 0:
 # https://wiki.mcneel.com/rhino/installingrhino/7
 for rhino_exe_path in rhino_exes:
 
-    args = [ rhino_exe_path,
+    process_args = [ rhino_exe_path,
                 '-repair',
                 '-quiet',
                 '-passive',
@@ -71,7 +71,7 @@ for rhino_exe_path in rhino_exes:
         os.environ['RHINO_TOKEN'] = args.token
         print('Running using Core Hour Billing')
 
-    proc.run(args)
+    proc.run(process_args)
 
     print (f'Installed Rhino : {rhino_exe_path}')
 
