@@ -21,6 +21,9 @@ jobs:
       - name: Setup wget
         run: pip install wget
 
+      - name: Setup ptest
+        run: pip install pytest
+
       - name: Test with pytest
         run: |
           pytest

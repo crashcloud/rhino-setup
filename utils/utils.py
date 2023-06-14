@@ -8,4 +8,7 @@ def get_os() -> str:
 def get_ext(os: str = get_os()) -> str:
     if os == 'win':
         return 'exe'
-    return 'dmg'
+    if os == 'mac':
+        return 'dmg'
+    
+    raise

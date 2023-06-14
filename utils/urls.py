@@ -1,6 +1,6 @@
 FILES_URL = 'https://files.mcneel.com'
 
-from utils import get_ext
+from utils.utils import get_ext
 
 def get_download_url(version:str, platform:str, full_version:str = 'latest', culture:str = 'en-us'):
     download_url_stack = {
