@@ -3,8 +3,10 @@ import wget
 import sys
 import os
 
-from utils import get_ext, get_os
-from urls import get_download_url
+import urls
+import utils
+
+from . import utils, urls
 
 FILES_URL = 'https://files.mcneel.com'
 
@@ -21,13 +23,13 @@ full_version = args.fullversion
 
 platform = args.platform
 if platform is None:
-    platform = get_os()
+    platform = utils.get_os()
 
-download_url = get_download_url(version, platform, full_version, culture)
-exe_name = f'rhino_{version}_{full_version}.{get_ext(platform)}'
+download_url = urls.get_download_url(version, platform, full_version, culture)
+exe_name = f'rhino_{version}_{full_version}.{utils.get_ext(platform)}'
 print(f'Downloading Rhino from {download_url} to {exe_name}')
 
-exe_name = f'rhino_{version}_{full_version}.{get_ext(platform)}'
+exe_name = f'rhino_{version}_{full_version}.{utils.get_ext(platform)}'
 if os.path.isfile(exe_name):
     print('Rhino is already downloaded. Using Cached version')
 else:

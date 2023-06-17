@@ -6,7 +6,7 @@ import wget
 import sys
 import os
 
-from utils import get_ext
+from . import utils
 
 parser = argparse.ArgumentParser(
     prog='Install Rhino',
@@ -43,7 +43,7 @@ elif license_method == LICENSE_METHOD_CORE and args.token is None:
     sys.exit(1)
 
 cwd = os.getcwd()
-rhino_exes = glob(f'{cwd}\*{get_ext()}')
+rhino_exes = glob(f'{cwd}\*{utils.get_ext()}')
 if len(rhino_exes) == 0:
     print('No rhino installation files found! Please run download-rhino.py')
     sys.exit(1)
