@@ -26,6 +26,7 @@ parser.add_argument('-l', '--licensing', type=str, required=True,
 parser.add_argument('-lk', '--licensekey', type=str, required=False, help='required if license key is chosen')
 parser.add_argument('-zs', '--zooserver', type=str, required=False, help='required if zoo is chosen')
 parser.add_argument('-tk', '--token', type=str, required=False, help='required if core is chosen')
+parser.add_argument('-l', '--log', type=str, required=False, default=True, help='log installation output?')
 
 args = parser.parse_args()
 
@@ -52,12 +53,18 @@ if len(rhino_exes) == 0:
 # https://wiki.mcneel.com/rhino/installingrhino/7
 for rhino_exe_path in rhino_exes:
 
+    if args.log:
+        log_location = f'{cwd}\installation.log'
+
     process_args = [ rhino_exe_path,
-                '-repair',
-                '-quiet',
-                '-passive',
                 '-norestart',
-                'INSTALL_EN=1']
+                '-log',
+                log_location,
+                'INSTALL_EN=1',
+                'COMPANY_NAME=crashcloud',
+                'CUSTOMER_NAME=circleci',
+                'SEND_STATISTICS=0',
+                'ENABLE_AUTOMATIC_UPDATES=0']
     
     if license_method == LICENSE_METHOD_STANDALONE:
         args += ['LICENSE_METHOD=STANDALONE', f'LICENSE_KEY={args.licensekey}']
@@ -68,7 +75,7 @@ for rhino_exe_path in rhino_exes:
         print('Running using Zoo Licensing')
 
     elif license_method == LICENSE_METHOD_CORE:
-        os.environ['RHINO_TOKEN'] = args.token
+        # os.environ['RHINO_TOKEN'] = args.token # removed for now. Set in CI/CD
         print('Running using Core Hour Billing')
 
     proc.run(process_args)
