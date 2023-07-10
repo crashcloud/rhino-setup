@@ -57,6 +57,8 @@ for rhino_exe_path in rhino_exes:
         log_location = f'{cwd}\installation.log'
 
     process_args = [ rhino_exe_path,
+                '-quiet',
+                '-passive',
                 '-norestart',
                 '-log',
                 log_location,
