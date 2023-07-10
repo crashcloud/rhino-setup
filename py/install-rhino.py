@@ -26,7 +26,7 @@ parser.add_argument('-l', '--licensing', type=str, required=True,
 parser.add_argument('-lk', '--licensekey', type=str, required=False, help='required if license key is chosen')
 parser.add_argument('-zs', '--zooserver', type=str, required=False, help='required if zoo is chosen')
 parser.add_argument('-tk', '--token', type=str, required=False, help='required if core is chosen')
-parser.add_argument('-l', '--log', type=str, required=False, default=True, help='log installation output?')
+parser.add_argument('-lo', '--log', type=str, required=False, default=True, help='log installation output?')
 
 args = parser.parse_args()
 
