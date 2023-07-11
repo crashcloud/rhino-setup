@@ -1,8 +1,6 @@
 import subprocess as proc
 from glob import glob
-import platform
 import argparse
-import wget
 import sys
 import os
 
